@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"os"
 )
 
@@ -115,16 +116,21 @@ func findBorder(filePtr *os.File, from int64, to int64, diff int, maxBufferSize 
 // findString searches string borders
 // returns (leftBorder, rightBorder, error)
 func findString(file *os.File, from int64, to int64) (int64, int64, error) {
-	//TODO naive implementation; need to write unit tests first & fix implementation mistakes
 	maxBufferSize := 64 * 1024
 	middle := (from + to) / 2
-	strFrom, err := findBorder(file, middle, from, -1, maxBufferSize)
+	fmt.Println(from)
+	fmt.Println(to)
+	strFrom, err := findBorder(file, from, middle, -1, maxBufferSize)
 	if err != nil {
 		return -1, -1, err
+	} else if strFrom == -1 {
+		strFrom = from
 	}
 	strTo, err := findBorder(file, middle+1, to, 1, maxBufferSize)
 	if err != nil {
 		return -1, -1, err
+	} else if strTo == -1 {
+		strTo = to
 	}
 	return strFrom, strTo, nil
 }
@@ -151,10 +157,10 @@ func blook(pattern string, file *os.File, size int64) (int64, error) {
 	return -1, nil
 }
 
-//file is a file in which search will performed
-//pattern is a string which should be found in file
-//returns index of the first byte of the first line
-//which starts with pattern
+// file is a file in which search will performed
+// pattern is a string which should be found in file
+// returns index of the first byte of the first line
+// which starts with pattern
 func filterLines(pattern string, file File) (int64, error) {
 	if file.size == 0 {
 		return -1, nil
