@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"os"
 )
 
@@ -76,13 +75,13 @@ func newLineIndex(buffer []byte, diff int) int {
 // findBorder searches for newline symbol in [from; to]
 // when diff = 1 makes forward search (`from` -> `to`)
 // when diff = -1 makes backward search (`to` -> `from`)
-func findBorder(filePtr *os.File, from int64, to int64, diff int, maxBufferSize int) (int64, error) {
+func findBorder(file *os.File, from int64, to int64, diff int, maxBufferSize int) (int64, error) {
 	size := to - from + int64(1)
 	currentSize := minimum(size, maxBufferSize)
 
 	position := from
 	if diff == -1 {
-		position = to - int64(currentSize)
+		position = to - int64(currentSize) + int64(1)
 	}
 	buffer := make([]byte, currentSize)
 
@@ -94,8 +93,9 @@ func findBorder(filePtr *os.File, from int64, to int64, diff int, maxBufferSize 
 			buffer = make([]byte, currentSize)
 		}
 
-		filePtr.Seek(position, 0)
-		n, err := filePtr.Read(buffer)
+		file.Seek(position, 0)
+
+		n, err := file.Read(buffer)
 		if err != nil {
 			return -1, err
 		} else if n < currentSize {
@@ -118,19 +118,25 @@ func findBorder(filePtr *os.File, from int64, to int64, diff int, maxBufferSize 
 func findString(file *os.File, from int64, to int64) (int64, int64, error) {
 	maxBufferSize := 64 * 1024
 	middle := (from + to) / 2
-	fmt.Println(from)
-	fmt.Println(to)
 	strFrom, err := findBorder(file, from, middle, -1, maxBufferSize)
 	if err != nil {
 		return -1, -1, err
 	} else if strFrom == -1 {
+		//no newline found, just return from position
 		strFrom = from
+	} else {
+		//new line found, need to increment position to omit newline byte
+		strFrom++
 	}
 	strTo, err := findBorder(file, middle+1, to, 1, maxBufferSize)
 	if err != nil {
 		return -1, -1, err
 	} else if strTo == -1 {
+		//no newline found, just return from position
 		strTo = to
+	} else {
+		//new line found, need to decrement position to omit newline byte
+		strTo--
 	}
 	return strFrom, strTo, nil
 }

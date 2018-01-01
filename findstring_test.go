@@ -12,11 +12,18 @@ func TestFindString(t *testing.T) {
 	}
 	defer file.Close()
 
-	left, right, err := findString(file, 0, 16)
-	assertEqual(t, err, int64(0), left, "")
-	assertEqual(t, err, int64(10), right, "") //also contains \n symbol in the end of line
+	for i := 0; i < 100; i++ {
+		left, right, err := findString(file, 0, 16)
+		assertEqual(t, err, int64(0), left, "")
+		assertEqual(t, err, int64(9), right, "")
 
-	left, right, err = findString(file, 0, 33)
-	assertEqual(t, err, int64(11), left, "")
-	assertEqual(t, err, int64(22), right, "")
+		//search again the same to test work with file current position
+		left, right, err = findString(file, 0, 16)
+		assertEqual(t, err, int64(0), left, "")
+		assertEqual(t, err, int64(9), right, "")
+
+		left, right, err = findString(file, 0, 32)
+		assertEqual(t, err, int64(11), left, "")
+		assertEqual(t, err, int64(21), right, "")
+	}
 }
