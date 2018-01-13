@@ -1,5 +1,7 @@
 # blook
 
+[![Build Status](https://travis-ci.org/abtv/blook.svg?branch=master)](https://travis-ci.org/abtv/blook)
+
 `blook` is a tool developed to save your time during text file analisys.
 It makes very fast search in sorted files and returns as many results as you wish.
 Please see `Use cases` section.
