@@ -6,36 +6,37 @@ import (
 	"strings"
 )
 
-func minimum(size int64, maxBufferSize int) int {
-	if size > int64(maxBufferSize) {
-		return maxBufferSize
+// min returns minimum of two int64 numbers
+func min(a int64, b int64) int64 {
+	if a > b {
+		return b
 	}
-	return int(size)
+	return a
 }
 
-func writeBytes(file *os.File, start int64, stop int64) (int64, error) {
+// writeBytes writes [start; stop) bytes from fromFile to toFile
+func writeBytes(fromFile *os.File, start int64, stop int64, toFile *os.File, maxBufferSize int64) (int64, error) {
 	var bytesWritten int64
 	bytesWritten = 0
 	if start >= stop {
 		return bytesWritten, nil
 	}
 
-	maxBufferSize := 1024 * 1024
-	file.Seek(start, 0)
-	buffer := make([]byte, minimum(stop-start, maxBufferSize))
+	fromFile.Seek(start, 0)
+	buffer := make([]byte, min(stop-start, maxBufferSize))
 	for current := start; current < stop; {
-		bufferSize := minimum(stop-current, maxBufferSize)
+		bufferSize := min(stop-current, maxBufferSize)
 		if bufferSize < maxBufferSize {
 			buffer = make([]byte, bufferSize)
 		}
 
-		n, err := file.Read(buffer)
+		n, err := fromFile.Read(buffer)
 		if err != nil {
 			return bytesWritten, err
-		} else if n < bufferSize {
+		} else if int64(n) < bufferSize {
 			return bytesWritten, errors.New("Error: unexpected end of input")
 		}
-		n, err = os.Stdout.Write(buffer)
+		n, err = toFile.Write(buffer)
 		if err != nil {
 			return bytesWritten, err
 		}
@@ -49,7 +50,7 @@ func writeBytes(file *os.File, start int64, stop int64) (int64, error) {
 
 // newLineIndex returns index of newline symbol in buffer;
 // if no newline symbol found returns -1
-func newLineIndex(buffer []byte, diff int) int {
+func newLineIndex(buffer []byte, diff int64) int {
 	n := len(buffer)
 	if n == 0 {
 		return -1
@@ -68,7 +69,7 @@ func newLineIndex(buffer []byte, diff int) int {
 		if buffer[idx] == '\n' {
 			return idx
 		}
-		idx = idx + diff
+		idx = idx + int(diff)
 		n--
 	}
 }
@@ -76,13 +77,13 @@ func newLineIndex(buffer []byte, diff int) int {
 // findBorder searches for newline symbol in [from; to]
 // when diff = 1 makes forward search (`from` -> `to`)
 // when diff = -1 makes backward search (`to` -> `from`)
-func findBorder(file *os.File, from int64, to int64, diff int, maxBufferSize int) (int64, error) {
+func findBorder(file *os.File, from int64, to int64, diff int64, maxBufferSize int64) (int64, error) {
 	size := to - from + int64(1)
-	currentSize := minimum(size, maxBufferSize)
+	currentSize := min(size, maxBufferSize)
 
 	position := from
 	if diff == -1 {
-		position = to - int64(currentSize) + int64(1)
+		position = to - currentSize + int64(1)
 	}
 	buffer := make([]byte, currentSize)
 
@@ -90,7 +91,7 @@ func findBorder(file *os.File, from int64, to int64, diff int, maxBufferSize int
 		if size == 0 {
 			return -1, nil
 		}
-		if len(buffer) != currentSize {
+		if int64(len(buffer)) != currentSize {
 			buffer = make([]byte, currentSize)
 		}
 
@@ -99,7 +100,7 @@ func findBorder(file *os.File, from int64, to int64, diff int, maxBufferSize int
 		n, err := file.Read(buffer)
 		if err != nil {
 			return -1, err
-		} else if n < currentSize {
+		} else if int64(n) < currentSize {
 			return -1, errors.New("Error: unexpected end of input")
 		}
 
@@ -108,16 +109,16 @@ func findBorder(file *os.File, from int64, to int64, diff int, maxBufferSize int
 			return position + int64(idx), nil
 		}
 
-		position = position + int64(diff*currentSize)
-		size = size - int64(currentSize)
-		currentSize = minimum(size, maxBufferSize)
+		position = position + diff*currentSize
+		size = size - currentSize
+		currentSize = min(size, maxBufferSize)
 	}
 }
 
 // findString searches string borders
 // returns (leftBorder, rightBorder, error)
 func findString(file *os.File, from int64, to int64) (int64, int64, error) {
-	maxBufferSize := 64 * 1024
+	maxBufferSize := int64(64 * 1024)
 	middle := (from + to) / 2
 	strFrom, err := findBorder(file, from, middle, -1, maxBufferSize)
 	if err != nil {

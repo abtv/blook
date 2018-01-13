@@ -1,6 +1,11 @@
 package main
 
-import "log"
+import (
+	"log"
+	"os"
+)
+
+var maxBufferSize = int64(1024 * 1024)
 
 func main() {
 	cmdParams, err := getCmdParams()
@@ -20,7 +25,7 @@ func main() {
 	}
 
 	if start != -1 && start < file.size {
-		_, err = writeBytes(file.ptr, start, file.size)
+		_, err = writeBytes(file.ptr, start, file.size, os.Stdout, maxBufferSize)
 		if err != nil {
 			log.Fatal(err)
 		}

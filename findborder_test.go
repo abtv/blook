@@ -12,6 +12,7 @@ func TestFindBorderIn1byteFile(t *testing.T) {
 	}
 	defer file.Close()
 
+	maxBufferSize := int64(2)
 	left, err := findBorder(file, 0, 0, -1, maxBufferSize)
 	assertEqual(t, err, int64(-1), left, "left border from the beginning tiny.txt")
 
@@ -26,6 +27,7 @@ func TestFindBorderInborderFile(t *testing.T) {
 	}
 	defer file.Close()
 
+	maxBufferSize := int64(2)
 	for i := 0; i <= 100; i++ {
 		left, err := findBorder(file, 0, 32, -1, maxBufferSize)
 		assertEqual(t, err, int64(22), left, "left border from the end of small.txt")

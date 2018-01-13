@@ -5,8 +5,6 @@ import (
 	"testing"
 )
 
-var maxBufferSize = 2
-
 func assertEqual(t *testing.T, err error, expected interface{}, actual interface{}, message string) {
 	if err != nil {
 		t.Error(message, err)
