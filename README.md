@@ -6,11 +6,14 @@ Please see `Use cases` section.
 
 ## Problem
 
-You have a big (several gigabytes or more) sorted text file. The file is too big to use _look_ Unix utility. And _sed_ is too slow.
+You have a big (several gigabytes or more) sorted text file.
+You want to find all the strings which starts with some prefix and to the end of the file.
+The file is too big to use _look_ Unix utility and _look_ returns only strings with the given prefix, but you want all the strings since the given position.
+_sed_ is too slow.
 
 ## The solution
 
-If your text files are sorted then you are happy!
+As your text files are sorted then you are happy!
 `blook` utility makes _binary_ search in your files. You can save a lot of time during file analisys.
 
 ## Usage
