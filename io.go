@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"os"
+	"strings"
 )
 
 func minimum(size int64, maxBufferSize int) int {
@@ -159,8 +160,47 @@ func getString(file *os.File, from int64, to int64) (string, error) {
 	return string(buffer[:bufferSize]), nil
 }
 
+// blook returns first byte number in the ordered `file` where `pattern` is occured as a prefix string
 func blook(pattern string, file *os.File, size int64) (int64, error) {
-	return -1, nil
+	result := int64(-1)
+	from := int64(0)
+	to := size - 1
+
+	const maxCalls = 32
+	currCall := 0
+
+	for {
+		if from < 0 || from > to || to >= size {
+			return result, nil
+		}
+
+		if currCall > maxCalls {
+			return -1, errors.New("MAX_CALLS_EXCEEDED")
+		}
+
+		strFrom, strTo, err := findString(file, from, to)
+		if err != nil {
+			return -1, err
+		}
+		value, err := getString(file, strFrom, strTo)
+		if err != nil {
+			return -1, err
+		}
+
+		if strings.Compare(value, pattern) == 1 || strings.HasPrefix(value, pattern) {
+			//it means that value > pattern or exact match (as prefix), it's already result,
+			//but we need to search to the beginning of file
+			result = strFrom
+			to = strFrom - int64(1)
+		} else {
+			//it means that value < pattern, we need to search to the end of file
+			from = strTo + int64(1)
+		}
+
+		currCall++
+	}
+
+	return result, nil
 }
 
 // file is a file in which search will performed
