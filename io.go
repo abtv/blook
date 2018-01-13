@@ -166,7 +166,7 @@ func blook(pattern string, file *os.File, size int64) (int64, error) {
 	from := int64(0)
 	to := size - 1
 
-	const maxCalls = 32
+	const maxCalls = 64
 	currCall := 0
 
 	for {
