@@ -6,9 +6,9 @@ import (
 )
 
 func TestFindString(t *testing.T) {
-	file, err := os.Open("test_files/border.txt")
+	file, err := os.Open("test_files/small.txt")
 	if err != nil {
-		t.Error("Can't open border.txt")
+		t.Error("Can't open small.txt")
 	}
 	defer file.Close()
 
