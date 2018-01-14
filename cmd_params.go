@@ -6,8 +6,8 @@ import (
 )
 
 type CmdParams struct {
-	pattern  string
-	filename string
+	pattern   string
+	filenames []string
 }
 
 func getCmdParams() (CmdParams, error) {
@@ -23,5 +23,5 @@ func getCmdParams() (CmdParams, error) {
 		return CmdParams{}, errors.New("Error: 'file' is required parameter")
 	}
 
-	return CmdParams{pattern: *pattern, filename: *filename}, nil
+	return CmdParams{pattern: *pattern, filenames: []string{*filename}}, nil
 }

@@ -7,19 +7,14 @@ import (
 
 var maxBufferSize = int64(1024 * 1024)
 
-func main() {
-	cmdParams, err := getCmdParams()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	file, err := openFile(cmdParams.filename)
+func filterFile(pattern string, filename string) {
+	file, err := openFile(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.ptr.Close()
 
-	start, err := filterLines(cmdParams.pattern, file)
+	start, err := filterLines(pattern, file)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,5 +24,16 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+	}
+}
+
+func main() {
+	cmdParams, err := getCmdParams()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, filename := range cmdParams.filenames {
+		filterFile(cmdParams.pattern, filename)
 	}
 }
