@@ -20,7 +20,7 @@ As your text files are sorted then you are happy!
 
 ## Usage
 
-`blook --pattern from --file file.log`
+`blook from_pattern file*.log`
 
 ## Use cases
 
@@ -38,7 +38,7 @@ Suppose you have log files with the following content:
 
 The following command returns all the lines from `/var/log/remote/your_service.log` file from `2018-01-13T10:10:23+00:00` timestamp to the end of the file:
 
-`./blook --pattern 2018-01-13T10:10:23+00:00 --file /var/log/remote/your_service.log`
+`./blook 2018-01-13T10:10:23+00:00 /var/log/remote/your_service.log`
 
 2. Search in sorted files of any kind
 
@@ -54,7 +54,7 @@ AB100500807 fail
 
 The following command returns all fail cases `/var/log/remote/your_device.log` file from `AB100500800` stamp to the end of the file:
 
-`./blook --pattern AB100500800 --file /var/log/remote/your_device.log | grep fail`
+`./blook AB100500800 /var/log/remote/your_device.log | grep fail`
 
 
 ## License
