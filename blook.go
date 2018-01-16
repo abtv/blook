@@ -14,18 +14,18 @@ func min(a int64, b int64) int64 {
 	return a
 }
 
-// writeBytes writes [start; stop) bytes from fromFile to toFile
+// writeBytes writes [start; stop] bytes from fromFile to toFile
 func writeBytes(fromFile *os.File, start int64, stop int64, toFile *os.File, maxBufferSize int64) (int64, error) {
 	var bytesWritten int64
 	bytesWritten = 0
-	if start >= stop {
+	if start > stop {
 		return bytesWritten, nil
 	}
 
 	fromFile.Seek(start, 0)
-	buffer := make([]byte, min(stop-start, maxBufferSize))
+	buffer := make([]byte, min(stop-start+1, maxBufferSize))
 	for current := start; current < stop; {
-		bufferSize := min(stop-current, maxBufferSize)
+		bufferSize := min(stop-current+1, maxBufferSize)
 		if bufferSize < maxBufferSize {
 			buffer = make([]byte, bufferSize)
 		}

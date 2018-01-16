@@ -30,7 +30,7 @@ func filterFile(patternFrom string, patternTo string, filename string) {
 		fmt.Fprintln(os.Stderr, err)
 	}
 
-	stop := file.size
+	stop := file.size - 1
 	if patternTo != "" {
 		stop, err = blook(patternTo, file.ptr, file.size, false)
 		stop++
@@ -39,7 +39,7 @@ func filterFile(patternFrom string, patternTo string, filename string) {
 		}
 	}
 
-	if start != -1 && start < stop {
+	if start != -1 && start <= stop {
 		maxBufferSize := int64(1024 * 1024)
 		_, err = writeBytes(file.ptr, start, stop, os.Stdout, maxBufferSize)
 		if err != nil {
