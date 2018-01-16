@@ -35,20 +35,20 @@ func TestBlookBackward(t *testing.T) {
 	}
 	defer file.Close()
 
-	position, err := blook("zzz", file, 34, false)
-	assertEqual(t, err, int64(0), position, "")
-
-	position, err = blook("third", file, 34, false)
-	assertEqual(t, err, int64(32), position, "")
-
-	position, err = blook("second", file, 34, false)
-	assertEqual(t, err, int64(21), position, "")
+	position, err := blook("aaa", file, 34, false)
+	assertEqual(t, err, int64(-1), position, "")
 
 	position, err = blook("first", file, 34, false)
 	assertEqual(t, err, int64(9), position, "")
 
-	position, err = blook("aaa", file, 34, false)
-	assertEqual(t, err, int64(-1), position, "")
+	position, err = blook("second", file, 34, false)
+	assertEqual(t, err, int64(21), position, "")
+
+	position, err = blook("third", file, 34, false)
+	assertEqual(t, err, int64(32), position, "")
+
+	position, err = blook("zzz", file, 34, false)
+	assertEqual(t, err, int64(32), position, "")
 }
 
 func TestEmpty(t *testing.T) {

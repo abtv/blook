@@ -31,6 +31,12 @@ func filterFile(patternFrom string, patternTo string, filename string) {
 	}
 
 	stop := file.size
+	if patternTo != "" {
+		stop, err = blook(patternTo, file.ptr, file.size, false)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
+	}
 
 	if start != -1 && start < stop {
 		maxBufferSize := int64(1024 * 1024)

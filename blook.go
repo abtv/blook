@@ -161,6 +161,18 @@ func getString(file *os.File, from int64, to int64) (string, error) {
 	return string(buffer[:bufferSize]), nil
 }
 
+// eligibleString returns true
+// for direction = true if pattern >= value (or pattern is prefix for value)
+// for direction = false if pattern <= value (or pattern is prefix for value)
+// otherwise it returns false
+func eligibleString(pattern string, value string, direction bool) bool {
+	order := -1
+	if direction {
+		order = 1
+	}
+	return strings.Compare(value, pattern) == order || strings.HasPrefix(value, pattern)
+}
+
 // blook returns first byte number in the ordered `file` where `pattern` is occured as a prefix string
 func blook(pattern string, file *os.File, size int64, forward bool) (int64, error) {
 	if size == 0 {
@@ -192,14 +204,22 @@ func blook(pattern string, file *os.File, size int64, forward bool) (int64, erro
 			return -1, err
 		}
 
-		if strings.Compare(value, pattern) == 1 || strings.HasPrefix(value, pattern) {
-			//it means that value > pattern or exact match (as prefix), it's already result,
-			//but we need to search to the beginning of file
-			result = strFrom
-			to = strFrom - int64(1)
+		if eligibleString(pattern, value, forward) {
+			//it's already result, but we need to search for more results
+			if forward {
+				result = strFrom
+				to = strFrom - int64(1)
+			} else {
+				result = strTo - int64(1)
+				from = strTo + int64(1)
+			}
 		} else {
-			//it means that value < pattern, we need to search to the end of file
-			from = strTo + int64(1)
+			//it's not a result, we need to search for more results
+			if forward {
+				from = strTo + int64(1)
+			} else {
+				to = strFrom - int64(1)
+			}
 		}
 
 		currCall++
