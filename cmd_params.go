@@ -5,9 +5,10 @@ import (
 )
 
 type CmdParams struct {
-	command   string
-	pattern   string
-	filenames []string
+	command     string
+	patternFrom string
+	patternTo   string
+	filenames   []string
 }
 
 func getCmdParams() CmdParams {
@@ -17,6 +18,6 @@ func getCmdParams() CmdParams {
 	} else if len(args) == 1 {
 		return CmdParams{command: args[0]}
 	} else {
-		return CmdParams{command: "filter", pattern: args[0], filenames: args[1:]}
+		return CmdParams{command: "filter", patternFrom: args[0], patternTo: "", filenames: args[1:]}
 	}
 }

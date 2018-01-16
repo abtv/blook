@@ -18,14 +18,14 @@ blook help - shows help
 blook version - shows version`)
 }
 
-func filterFile(pattern string, filename string) {
+func filterFile(patternFrom string, patternTo string, filename string) {
 	file, err := openFile(filename)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
 	defer file.ptr.Close()
 
-	start, err := blook(pattern, file.ptr, file.size)
+	start, err := blook(patternFrom, file.ptr, file.size)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
@@ -39,9 +39,9 @@ func filterFile(pattern string, filename string) {
 	}
 }
 
-func filter(pattern string, filenames []string) {
+func filter(patternFrom string, patternTo string, filenames []string) {
 	for _, filename := range filenames {
-		filterFile(pattern, filename)
+		filterFile(patternFrom, patternTo, filename)
 	}
 }
 
@@ -54,7 +54,7 @@ func main() {
 	case "help":
 		showHelp()
 	case "filter":
-		filter(cmdParams.pattern, cmdParams.filenames)
+		filter(cmdParams.patternFrom, cmdParams.patternTo, cmdParams.filenames)
 	default:
 		fmt.Fprintln(os.Stderr, "Unknown parameter. Please use `blook help`")
 	}
