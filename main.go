@@ -33,7 +33,6 @@ func filterFile(patternFrom string, patternTo string, filename string) {
 	stop := file.size - 1
 	if patternTo != "" {
 		stop, err = blook(patternTo, file.ptr, file.size, false)
-		stop++
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
@@ -45,6 +44,7 @@ func filterFile(patternFrom string, patternTo string, filename string) {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
+		fmt.Println("") //add newline symbol to the end of filter output
 	}
 }
 
