@@ -163,6 +163,10 @@ func getString(file *os.File, from int64, to int64) (string, error) {
 
 // blook returns first byte number in the ordered `file` where `pattern` is occured as a prefix string
 func blook(pattern string, file *os.File, size int64) (int64, error) {
+	if size == 0 {
+		return -1, nil
+	}
+
 	result := int64(-1)
 	from := int64(0)
 	to := size - 1
@@ -202,16 +206,4 @@ func blook(pattern string, file *os.File, size int64) (int64, error) {
 	}
 
 	return result, nil
-}
-
-// file is a file in which search will performed
-// pattern is a string which should be found in file
-// returns index of the first byte of the first line
-// which starts with pattern
-func filterLines(pattern string, file File) (int64, error) {
-	if file.size == 0 {
-		return -1, nil
-	}
-
-	return blook(pattern, file.ptr, file.size)
 }

@@ -10,7 +10,7 @@ func showVersion() {
 }
 
 func showHelp() {
-	fmt.Println(`Usage: blook from_pattern [filename]
+	fmt.Println(`Usage: blook from_pattern [-m to_pattern] [filename]
 Makes binary search in [filename]. Returns all the lines which equals or more than 'from_pattern' to the end of the file.
 
 Other options:
@@ -25,7 +25,7 @@ func filterFile(pattern string, filename string) {
 	}
 	defer file.ptr.Close()
 
-	start, err := filterLines(pattern, file)
+	start, err := blook(pattern, file.ptr, file.size)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}

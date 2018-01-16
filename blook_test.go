@@ -27,3 +27,14 @@ func TestBlook(t *testing.T) {
 	position, err = blook("zzz", file, 34)
 	assertEqual(t, err, int64(-1), position, "")
 }
+
+func TestEmpty(t *testing.T) {
+	file, err := os.Open("test_files/empty.txt")
+	if err != nil {
+		t.Error("Can't open empty.txt")
+	}
+	defer file.Close()
+
+	position, err := blook("aaa", file, 0)
+	assertEqual(t, err, int64(-1), position, "")
+}
