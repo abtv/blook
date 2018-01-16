@@ -210,8 +210,8 @@ func blook(pattern string, file *os.File, size int64, forward bool) (int64, erro
 				result = strFrom
 				to = strFrom - int64(1)
 			} else {
-				result = strTo - int64(1)
-				from = strTo + int64(1)
+				result = strTo
+				from = strTo + int64(2) //next byte is \n, so we need to move to the bytes after \n
 			}
 		} else {
 			//it's not a result, we need to search for more results

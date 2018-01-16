@@ -33,6 +33,7 @@ func filterFile(patternFrom string, patternTo string, filename string) {
 	stop := file.size
 	if patternTo != "" {
 		stop, err = blook(patternTo, file.ptr, file.size, false)
+		stop++
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
@@ -53,6 +54,10 @@ func filter(patternFrom string, patternTo string, filenames []string) {
 	}
 }
 
+func showError() {
+	fmt.Fprintln(os.Stderr, "Unknown parameter. Please use `blook help`")
+}
+
 func main() {
 	cmdParams := getCmdParams()
 
@@ -63,7 +68,9 @@ func main() {
 		showHelp()
 	case "filter":
 		filter(cmdParams.patternFrom, cmdParams.patternTo, cmdParams.filenames)
+	case "error":
+		showError()
 	default:
-		fmt.Fprintln(os.Stderr, "Unknown parameter. Please use `blook help`")
+		showError()
 	}
 }
