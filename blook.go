@@ -162,7 +162,7 @@ func getString(file *os.File, from int64, to int64) (string, error) {
 }
 
 // blook returns first byte number in the ordered `file` where `pattern` is occured as a prefix string
-func blook(pattern string, file *os.File, size int64) (int64, error) {
+func blook(pattern string, file *os.File, size int64, forward bool) (int64, error) {
 	if size == 0 {
 		return -1, nil
 	}

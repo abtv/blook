@@ -25,14 +25,16 @@ func filterFile(patternFrom string, patternTo string, filename string) {
 	}
 	defer file.ptr.Close()
 
-	start, err := blook(patternFrom, file.ptr, file.size)
+	start, err := blook(patternFrom, file.ptr, file.size, true)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
 
-	if start != -1 && start < file.size {
+	stop := file.size
+
+	if start != -1 && start < stop {
 		maxBufferSize := int64(1024 * 1024)
-		_, err = writeBytes(file.ptr, start, file.size, os.Stdout, maxBufferSize)
+		_, err = writeBytes(file.ptr, start, stop, os.Stdout, maxBufferSize)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
