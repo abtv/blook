@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 )
 
@@ -11,24 +12,15 @@ type CmdParams struct {
 	filenames   []string
 }
 
-func getCmdParams() CmdParams {
+func getCmdParams() (CmdParams, error) {
 	args := os.Args[1:]
 	if len(args) == 0 {
-		return CmdParams{command: "help"}
+		return CmdParams{command: "help"}, nil
 	} else if len(args) == 1 {
-		return CmdParams{command: args[0]}
+		return CmdParams{command: args[0]}, nil
 	} else if len(args) == 2 {
-		if args[1] == "-m" {
-			return CmdParams{command: "error"}
-		}
-		return CmdParams{command: "filter", patternFrom: args[0], patternTo: "", filenames: args[1:]}
+		return CmdParams{}, errors.New("you need to provide at least one file")
 	} else {
-		if args[1] == "-m" {
-			if len(args) == 3 {
-				return CmdParams{command: "error"}
-			}
-			return CmdParams{command: "filter", patternFrom: args[0], patternTo: args[2], filenames: args[3:]}
-		}
-		return CmdParams{command: "filter", patternFrom: args[0], patternTo: "", filenames: args[1:]}
+		return CmdParams{command: "filter", patternFrom: args[0], patternTo: args[1], filenames: args[2:]}, nil
 	}
 }

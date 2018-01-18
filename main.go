@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 )
@@ -10,8 +11,8 @@ func showVersion() {
 }
 
 func showHelp() {
-	fmt.Println(`Usage: blook from_pattern [-m to_pattern] [filename]
-Makes binary search in [filename]. Returns all the lines which equals or more than 'from_pattern' to the end of the file.
+	fmt.Println(`Usage: blook from_pattern to_pattern file [file ...]
+Makes binary search in one or more files. Returns all the lines which >= 'from_pattern' and <= 'to_pattern'.
 
 Other options:
 blook help - shows help
@@ -30,12 +31,9 @@ func filterFile(patternFrom string, patternTo string, filename string) {
 		fmt.Fprintln(os.Stderr, err)
 	}
 
-	stop := file.size - 1
-	if patternTo != "" {
-		stop, err = blook(patternTo, file.ptr, file.size, false)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-		}
+	stop, err := blook(patternTo, file.ptr, file.size, false)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 	}
 
 	if start != -1 && start <= stop {
@@ -54,12 +52,16 @@ func filter(patternFrom string, patternTo string, filenames []string) {
 	}
 }
 
-func showError() {
-	fmt.Fprintln(os.Stderr, "Unknown parameter. Please use `blook help`")
+func showError(err error) {
+	fmt.Fprintln(os.Stderr, err)
 }
 
 func main() {
-	cmdParams := getCmdParams()
+	cmdParams, err := getCmdParams()
+	if err != nil {
+		showError(err)
+		return
+	}
 
 	switch cmdParams.command {
 	case "version":
@@ -68,9 +70,7 @@ func main() {
 		showHelp()
 	case "filter":
 		filter(cmdParams.patternFrom, cmdParams.patternTo, cmdParams.filenames)
-	case "error":
-		showError()
 	default:
-		showError()
+		showError(errors.New("Unknown command. Please use 'blook help'"))
 	}
 }
