@@ -4,27 +4,12 @@
 
 `blook` is a tool developed to save your time during text file analisys.
 It makes very fast search in sorted files and returns as many results as you wish.
-Please see `Use cases` section.
-
-## Problem
-
-You have a big (several gigabytes or more) sorted text file.
-You want to find all the strings which starts with some prefix and to the end of the file.
-The file is too big to use _look_ Unix utility and _look_ returns only strings with the given prefix, but you want all the strings since the given position.
-_sed_ is too slow.
-
-## The solution
-
-As your text files are sorted then you are happy!
-`blook` utility makes _binary_ search in your files. You can save a lot of time during file analisys.
 
 ## Usage
 
-`blook from_pattern -m to_pattern file*.log`
+`blook from_pattern to_pattern file1.log [file2.log ...]`
 
-## Use cases
-
-1. Search in logs
+## Example
 
 Suppose you have log files with the following content:
 
@@ -36,31 +21,9 @@ Suppose you have log files with the following content:
 ...
 ```
 
-The following command returns all the lines from `/var/log/remote/your_service.log` file from `2018-01-13T10:10:23+00:00` timestamp to the end of the file:
+The following command returns all the lines from `/var/log/remote/your_service.log` file between `2018-01-13T10:10:23+00:00` and `2018-01-13T10:20:23+00:00` timestamps:
 
-`./blook 2018-01-13T10:10:23+00:00 /var/log/remote/your_service.log`
-
-And the following command returns all the lines from `/var/log/remote/your_service.log` file between `2018-01-13T10:10:23+00:00` and `2018-01-13T10:20:23+00:00` timestamps:
-
-`./blook 2018-01-13T10:10:23+00:00 -m 2018-01-13T10:20:23+00:00 /var/log/remote/your_service.log`
-
-
-2. Search in sorted files of any kind
-
-Suppose you have text files with the following content:
-
-```
-...
-AB100500800 ok
-AB100500801 fail
-AB100500807 fail
-...
-```
-
-The following command returns all fail cases `/var/log/remote/your_device.log` file from `AB100500800` stamp to the end of the file:
-
-`./blook AB100500800 /var/log/remote/your_device.log | grep fail`
-
+`./blook 2018-01-13T10:10:23+00:00 2018-01-13T10:20:23+00:00 /var/log/remote/your_service.log`
 
 ## License
 
