@@ -2,20 +2,27 @@
 
 [![Build Status](https://travis-ci.org/abtv/blook.svg?branch=master)](https://travis-ci.org/abtv/blook)
 
+## What is it?
+
 **blook** is a tool developed to save your time during text file analysis.
-It makes very fast binary **range search by prefix** in sorted files and returns as many results as you wish.
+It makes very fast binary **range search by prefix** in sorted files.
 
 ## When to use `blook`
 
-* **sed** & **awk** are slow because they make linear search. If files are sorted we should use binary search instead. Please, check `Benchmarks` section for more info.
+When you need to find something in big logs, time series data, etc.
+
+You can say there are **sed**, **awk** and **look**. There are reasons against them:
+
+* **sed** and **awk** are slow because they make linear processing. If files are sorted we should use binary search instead. Please, check `Benchmarks` section for more info.
 
 * we could use Unix **look** utility, but it has 2 disadvantages:
-  - it doesn't support range search (find all the lines between `2018-01-13T10:10` and `2018-01-13T10:12`)
+  - it doesn't support range search (for example, find all the lines between `2018-01-13T10:10` and `2018-01-13T10:12`)
   - it doesn't work with very big files (because it works via mmap)
 
 ## When not to use `blook`
 
-* if you need only prefix search **without** range search **and** your files can be mmap-ed, just use **look**
+* if you need to search in non-sorted files, just use **sed** or **awk**
+* if you need only prefix search **without** range search **and** your files can be mmap-ed, just use **look** (because it's already included in any Unix system)
 
 ## Usage
 
