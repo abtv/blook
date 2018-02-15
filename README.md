@@ -2,20 +2,20 @@
 
 [![Build Status](https://travis-ci.org/abtv/blook.svg?branch=master)](https://travis-ci.org/abtv/blook)
 
-`blook` is a tool developed to save your time during text file analisys.
-It makes very fast _range search by prefix_ in sorted files and returns as many results as you wish.
+**blook** is a tool developed to save your time during text file analysis.
+It makes very fast binary **range search by prefix** in sorted files and returns as many results as you wish.
 
 ## When to use `blook`
 
-* sed & awk are slow because they make linear search. If files are sorted we should use binary search instead. Please, check `Benchmarks` section for more info.
+* **sed** & **awk** are slow because they make linear search. If files are sorted we should use binary search instead. Please, check `Benchmarks` section for more info.
 
-* we could use Unix `look` utility, but it has 2 disadvantages:
+* we could use Unix **look** utility, but it has 2 disadvantages:
   - it doesn't support range search (find all the lines between `2018-01-13T10:10` and `2018-01-13T10:12`)
-  - it doesn't work with very big files, because it works via `mmap`
+  - it doesn't work with very big files (because it works via mmap)
 
 ## When not to use `blook`
 
-* if you need only prefix search `without` range search `and` your files can be `mmap`ed, just use `look`
+* if you need only prefix search **without** range search **and** your files can be mmap-ed, just use **look**
 
 ## Usage
 
@@ -54,7 +54,7 @@ env GOOS=linux go build
 
 Just run ./benchmark.sh . Be careful: benchmark will create a file about 260MB.
 
-My results:
+My results (blook works at least **1500 times faster** for this file):
 
 ```
 
