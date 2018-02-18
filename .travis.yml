@@ -4,4 +4,5 @@ go:
 
 script:
 - go test -v ./...
+- golint
 - go build
