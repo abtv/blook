@@ -224,6 +224,4 @@ func blook(pattern string, file *os.File, size int64, forward bool) (int64, erro
 
 		currCall++
 	}
-
-	return result, nil
 }

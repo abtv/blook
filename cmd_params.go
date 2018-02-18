@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// CmdParams contains the program startup parameters extracted from command line arguments
 type CmdParams struct {
 	command     string
 	patternFrom string
@@ -20,7 +21,7 @@ func getCmdParams() (CmdParams, error) {
 		return CmdParams{command: args[0]}, nil
 	} else if len(args) == 2 {
 		return CmdParams{}, errors.New("you need to provide at least one file")
-	} else {
-		return CmdParams{command: "filter", patternFrom: args[0], patternTo: args[1], filenames: args[2:]}, nil
 	}
+
+	return CmdParams{command: "filter", patternFrom: args[0], patternTo: args[1], filenames: args[2:]}, nil
 }

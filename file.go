@@ -4,6 +4,7 @@ import (
 	"os"
 )
 
+// File contains file related information
 type File struct {
 	ptr  *os.File
 	size int64
