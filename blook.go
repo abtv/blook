@@ -162,12 +162,12 @@ func getString(file *os.File, from int64, to int64) (string, error) {
 }
 
 // eligibleString returns true
-// for direction = true if pattern >= value (or pattern is prefix for value)
-// for direction = false if pattern <= value (or pattern is prefix for value)
+// for forward = true if pattern >= value (or pattern is prefix for value)
+// for forward = false if pattern <= value (or pattern is prefix for value)
 // otherwise it returns false
-func eligibleString(pattern string, value string, direction bool) bool {
+func eligibleString(pattern string, value string, forward bool) bool {
 	order := -1
-	if direction {
+	if forward {
 		order = 1
 	}
 	return strings.Compare(value, pattern) == order || strings.HasPrefix(value, pattern)
